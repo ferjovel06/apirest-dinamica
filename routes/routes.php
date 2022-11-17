@@ -1,5 +1,8 @@
 <?php
 
+require_once "models/connection.php";
+require_once "controllers/get.controller.php";
+
 $routesArray = explode("/", $_SERVER['REQUEST_URI']);
 $routesArray = array_filter($routesArray);
 
@@ -8,7 +11,7 @@ $routesArray = array_filter($routesArray);
  */
 
 if (count($routesArray) == 0) {
-	
+
 	$json = array(
 
 		'status' => 404,
@@ -18,7 +21,6 @@ if (count($routesArray) == 0) {
 
 	echo json_encode($json, http_response_code($json["status"]));
 	return;
-
 }
 
 /**
@@ -26,66 +28,56 @@ if (count($routesArray) == 0) {
  */
 
 if (count($routesArray) == 1 && isset($_SERVER['REQUEST_METHOD'])) {
-	
+
+	$table = explode("?", $routesArray[1])[0];
+
 	/**
 	 * Peticiones GET
 	 */
 
-	if($_SERVER['REQUEST_METHOD'] == "GET"){
+	if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
 		include "services/get.php";
-
 	}
 
 	/**
 	 * Peticiones POST
 	 */
 
-	if($_SERVER['REQUEST_METHOD'] == "POST"){
+	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-		$json = array(
-
-		'status' => 200,
-		'resultado' => 'Solicitud POST'
-
-	);
-
-		echo json_encode($json, http_response_code($json["status"]));
-
+		include "services/post.php";
 	}
 
 	/**
 	 * Peticiones PUT
 	 */
 
-	if($_SERVER['REQUEST_METHOD'] == "PUT"){
+	if ($_SERVER['REQUEST_METHOD'] == "PUT") {
 
 		$json = array(
 
-		'status' => 200,
-		'resultado' => 'Solicitud PUT'
+			'status' => 200,
+			'resultado' => 'Solicitud PUT'
 
-	);
+		);
 
 		echo json_encode($json, http_response_code($json["status"]));
-
 	}
 
 	/**
 	 * Peticiones DELETE
 	 */
 
-	if($_SERVER['REQUEST_METHOD'] == "DELETE"){
+	if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
 
 		$json = array(
 
-		'status' => 200,
-		'resultado' => 'Solicitud DELETE'
+			'status' => 200,
+			'resultado' => 'Solicitud DELETE'
 
-	);
+		);
 
 		echo json_encode($json, http_response_code($json["status"]));
-
 	}
 }
-
