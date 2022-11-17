@@ -59,13 +59,7 @@ class GetModel
 
 		$stmt = Connection::connect()->prepare($sql);
 
-		try {
-
-			$stmt->execute();
-		} catch (PDOException $Exception) {
-
-			return null;
-		}
+		$stmt->execute();
 
 		return $stmt->fetchAll(PDO::FETCH_CLASS);
 	}

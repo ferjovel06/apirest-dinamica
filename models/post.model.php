@@ -11,13 +11,39 @@ class PostModel
     static public function postData($table, $data)
     {
 
-        echo "\$table ";
-        print_r($table);
-        echo "\n";
-        echo "\$data ";
-        print_r($data);
-        echo "\n";
+        $columns = "";
+        $params = "";
 
-        $sql = "INSERT INTO $table(`title_course`, `description_course`, `id_instructor_course`, `image_course`, `price_course`, `date_created_course`) VALUES (`:title_course`, `:description_course`, `:id_instructor_course`, `:image_course`, `:price_course`, `:date_created_course`)";
+        foreach ($data as $key => $value) {
+
+            $columns .= $key . ",";
+            $params .= ":" . $key . ",";
+        }
+
+        $columns = substr($columns, 0, -1);
+        $params = substr($params, 0, -1);
+
+        $sql = "INSERT INTO $table($columns) VALUES ($params)";
+
+        $link = Connection::connect();
+        $stmt = $link->prepare($sql);
+
+        foreach ($data as $key => $value) {
+            $stmt->bindParam(":" . $key, $data[$key], PDO::PARAM_STR);
+        }
+
+        if ($stmt->execute()) {
+
+            $response = array(
+
+                "lastId" => $link->lastInsertId(),
+                "comment" => "The process was successful"
+            );
+
+            return $response;
+        } else {
+
+            return $link->errorInfo();
+        }
     }
 }
